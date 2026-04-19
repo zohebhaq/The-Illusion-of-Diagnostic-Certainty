@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Illusion of Diagnostic Certainty</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ink: #1a1a2e;
+      --mid: #3d3d5c;
+      --light: #7a7a9a;
+      --accent: #2e4a7a;
+      --accent2: #17536b;
+      --bg: #fdfcf8;
+      --border: #d6d0c4;
+      --note-bg: #eef4fb;
+      --note-border: #2e4a7a;
+      --serif: 'EB Garamond', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+
+    html {
+      font-size: 11pt;
+    }
+
+    body {
+      font-family: var(--serif);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.75;
+    }
+
+    .page {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 48pt 52pt 60pt;
+    }
+
+    .title-block {
+      border-top: 3px solid var(--accent);
+      padding-top: 28px;
+      margin-bottom: 36px;
+    }
+
+    .journal-label {
+      font-family: var(--sans);
+      font-size: 8pt;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    h1.article-title {
+      font-family: var(--serif);
+      font-size: 26pt;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 12pt;
+      color: var(--mid);
+      margin-bottom: 24px;
+    }
+
+    .meta {
+      font-family: var(--sans);
+      font-size: 8.5pt;
+      color: var(--light);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    .abstract {
+      background: #f4f1ec;
+      border-left: 4px solid var(--accent);
+      padding: 18px 22px;
+      margin-bottom: 36px;
+      border-radius: 2px;
+    }
+
+    .abstract h2 {
+      font-family: var(--sans);
+      font-size: 8pt;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .abstract p {
+      font-size: 9.5pt;
+      line-height: 1.65;
+      color: var(--mid);
+    }
+
+    h2.section-head {
+      font-family: var(--sans);
+      font-size: 8pt;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      font-weight: 600;
+      margin-top: 42px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 5px;
+    }
+
+    h2.section-head .roman {
+      color: var(--light);
+      margin-right: 6px;
+    }
+
+    p {
+      margin-bottom: .95em;
+    }
+
+    strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.6em;
+      margin-bottom: 1em;
+    }
+
+    li {
+      margin-bottom: .45em;
+    }
+
+    .figure-wrap {
+      margin: 32px 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .figure-wrap img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .07);
+    }
+
+    .figure-caption {
+      font-family: var(--sans);
+      font-size: 8.5pt;
+      color: var(--mid);
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: left;
+      padding: 0 8px;
+    }
+
+    .figure-caption strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tech-note {
+      background: var(--note-bg);
+      border: 1px solid #b8cfe4;
+      border-left: 5px solid var(--note-border);
+      border-radius: 4px;
+      padding: 22px 26px;
+      margin: 30px 0;
+      page-break-inside: avoid;
+    }
+
+    .tech-note-header {
+      font-family: var(--sans);
+      font-size: 8pt;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--note-border);
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tech-note h3 {
+      font-family: var(--serif);
+      font-size: 13pt;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    .tech-note p {
+      font-size: 10.5pt;
+    }
+
+    .tech-note table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-family: var(--sans);
+      font-size: 9pt;
+    }
+
+    .tech-note table th {
+      background: #d1e2f0;
+      color: var(--accent);
+      font-weight: 600;
+      padding: 7px 10px;
+      text-align: left;
+      border-bottom: 2px solid #b8cfe4;
+    }
+
+    .tech-note table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #dde8f2;
+      color: var(--mid);
+    }
+
+    .tech-note table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .worked-example {
+      background: #ffffff;
+      border: 1px dashed #b8cfe4;
+      border-radius: 3px;
+      padding: 14px 18px;
+      margin-top: 16px;
+    }
+
+    .worked-example-label {
+      font-family: var(--sans);
+      font-size: 8pt;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .result-highlight {
+      background: #fff3cd;
+      border: 1px solid #ffc857;
+      border-radius: 3px;
+      padding: 10px 14px;
+      margin-top: 10px;
+      font-family: var(--sans);
+      font-size: 9.5pt;
+      color: #7a5200;
+      font-weight: 500;
+    }
+
+    .references {
+      margin-top: 48px;
+      border-top: 2px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .references h2 {
+      font-family: var(--sans);
+      font-size: 8pt;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--light);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .references ol {
+      font-size: 9pt;
+      color: var(--mid);
+      line-height: 1.6;
+    }
+
+    .doc-footer {
+      margin-top: 48px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      font-family: var(--sans);
+      font-size: 8pt;
+      color: var(--light);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media print {
+      html {
+        font-size: 10pt;
+      }
+
+      body {
+        background: white;
+      }
+
+      .page {
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .figure-wrap,
+      .tech-note,
+      h2.section-head {
+        page-break-inside: avoid;
+      }
+
+      h2.section-head {
+        page-break-after: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <div class="title-block">
+      <div class="journal-label">Review Article &nbsp;&middot;&nbsp; Clinical Decision-Making &amp; Medical Statistics
+      </div>
+      <h1 class="article-title">The Illusion of Diagnostic Certainty</h1>
+      <div class="subtitle">Sensitivity, Specificity, and the Bayesian Correction for the Base Rate Fallacy in Clinical
+        Screening</div>
+      <div class="meta">Zoheb Haq &nbsp;&middot;&nbsp; April 2026</div>
+    </div>
+
+    <div class="abstract">
+      <h2>Abstract</h2>
+      <p>Diagnostic screening instruments are characterised by sensitivity and specificity, yet these parameters are
+        insufficient for individualized prognosis. The Positive Predictive Value (PPV)&mdash;the posterior probability
+        of disease given a positive result&mdash;is critically dependent on disease prevalence and collapses at low base
+        rates, a phenomenon driven by the base rate fallacy. This article provides a structured account of this
+        discrepancy, introduces the Bayesian framework as the normative corrective, and derives actionable clinical
+        implications for screening programme design and patient communication.</p>
+    </div>
+
+    <h2 class="section-head"><span class="roman">I.</span> Prologue: A Positive Result</h2>
+    <p>Imagine walking into a clinic for a routine check-up. A few days later, you receive a call: your test has
+      returned a positive result for a rare condition. Panic is the immediate, instinctive reaction. But what if the
+      mathematics suggests that you are far more likely to be healthy than sick?</p>
+    <p>In clinical diagnostics, test results are rarely the definitive &ldquo;yes or no&rdquo; answers we crave; they
+      are merely data points within a complex web of probability. Understanding why requires confronting both the
+      technical limitations of diagnostic instruments and the cognitive biases that distort how clinicians&mdash;and
+      patients&mdash;interpret their outputs.</p>
+
+    <h2 class="section-head"><span class="roman">II.</span> Characterising Diagnostic Performance</h2>
+    <p>Diagnostic screening modalities are inherently subject to imperfect classification, necessitating a rigorous
+      probabilistic framework to interpret clinical outcomes. The efficacy of these instruments is quantified by two
+      fundamental parameters:</p>
+    <ul>
+      <li><strong>Sensitivity</strong> &mdash; the probability of a positive test result <em>given the presence</em> of
+        the disease: $P(T^+ \mid D^+)$.</li>
+      <li><strong>Specificity</strong> &mdash; the probability of a negative test result <em>given the absence</em> of
+        the disease: $P(T^- \mid D^-)$.</li>
+    </ul>
+    <p>These parameters are properties of the test itself, derived from controlled validation studies, and therefore
+      analytically invariant with respect to the prevalence of disease in any given population. This apparent
+      robustness, however, masks a critical limitation: sensitivity and specificity alone are insufficient for
+      individualized clinical prognosis.</p>
+
+    <div class="figure-wrap">
+      <img src="The Illusion of Diagnostic Certainty_files/figure1_contingency_table_1776600263770.png"
+        alt="Figure 1: 2x2 Diagnostic Contingency Table" />
+      <div class="figure-caption"><strong>Figure 1.</strong> The 2&times;2 diagnostic contingency table. Sensitivity is
+        derived from the left column (Disease Present) as TP/(TP+FN); Specificity from the right column (Disease Absent)
+        as TN/(TN+FP). These parameters are column-conditional and therefore prevalence-invariant.</div>
+    </div>
+
+    <h2 class="section-head"><span class="roman">III.</span> The Metric That Actually Matters: Positive Predictive Value
+    </h2>
+    <p>From the clinician&rsquo;s standpoint&mdash;and more acutely from the patient&rsquo;s perspective&mdash;the
+      question is never <em>&ldquo;how accurate is this test?&rdquo;</em> but rather <em>&ldquo;given that my result is
+        positive, what is the probability that I am truly ill?&rdquo;</em></p>
+    <p>This is precisely what the <strong>Positive Predictive Value (PPV)</strong> quantifies: the <em>posterior
+        probability</em> that a patient truly harbours a pathology, contingent upon a reactive result. Unlike
+      sensitivity and specificity, the PPV is highly sensitive to the <strong>prior probability</strong> of disease
+      within the tested population&mdash;that is, its <strong>prevalence</strong>.</p>
+    <p>This dependency has a profound and counterintuitive clinical implication: even an assay with high technical
+      specificity may yield a PPV substantially lower than intuition suggests when deployed in a low-prevalence setting.
+      The mechanism is the disproportionate accumulation of <strong>false-positive results</strong> within a
+      predominantly healthy cohort. As prevalence decreases, the ratio of false positives to true positives grows
+      inexorably, eroding the PPV.</p>
+
+    <div class="figure-wrap">
+      <img src="The Illusion of Diagnostic Certainty_files/figure2_ppv_prevalence_graph_1776600334702.png"
+        alt="Figure 2: PPV vs Disease Prevalence" />
+      <div class="figure-caption"><strong>Figure 2.</strong> Positive Predictive Value as a function of disease
+        prevalence for tests of differing specificity (90%, 95%, 99%). Note the non-linear collapse of PPV at low
+        prevalence values characteristic of population-wide screening. The marker at 1% prevalence illustrates the
+        vulnerability of even high-specificity assays in rare-disease contexts.</div>
+    </div>
+
+    <h2 class="section-head"><span class="roman">IV.</span> The Cognitive Trap: The Base Rate Fallacy</h2>
+    <p>This discrepancy between a test&rsquo;s technical accuracy and its real-world predictive power is not merely a
+      statistical artefact&mdash;it is the engine of a well-characterised cognitive bias known as the <strong>base rate
+        fallacy</strong> (also termed <em>base rate neglect</em>).</p>
+    <p>This bias manifests when an observer focuses exclusively on the diagnostic accuracy of the test&mdash;the
+      <em>likelihood</em> information&mdash;while systematically neglecting the low base rate of the condition&mdash;the
+      <em>prior</em> information. In clinical environments, this leads to significant overestimation of the probability
+      of disease following a positive result, with consequential downstream effects: unnecessary confirmatory
+      investigations, patient anxiety, and inappropriate therapeutic intervention.</p>
+    <p>The base rate fallacy is not confined to lay interpretation; empirical studies have demonstrated its prevalence
+      among trained clinicians, particularly when probabilistic information is presented in percentage rather than
+      natural frequency formats (Gigerenzer &amp; Hoffrage, 1995). This underscores the necessity of a formal,
+      structured approach to diagnostic inference.</p>
+
+    <h2 class="section-head"><span class="roman">V.</span> The Formal Solution: A Bayesian Framework</h2>
+
+    <div class="tech-note">
+      <div class="tech-note-header"><span>📐</span> Technical Note</div>
+      <h3>Bayes&rsquo; Theorem Applied to Diagnostic Testing</h3>
+      <p>To move beyond intuitive errors and formally quantify the true posterior probability of disease, one must apply
+        <strong>Bayes&rsquo; Theorem</strong>. This framework provides a mathematically coherent mechanism for updating
+        a prior belief&mdash;the pre-test probability of disease (prevalence)&mdash;in light of new evidence (the test
+        result).</p>
+      <p>The <strong>Positive Predictive Value</strong>, or posterior probability $P(D^+ \mid T^+)$, is derived as
+        follows:</p>
+      $$P(D^+ \mid T^+) = \frac{P(T^+ \mid D^+) \cdot P(D^+)}{P(T^+)}$$
+      <p>The denominator, $P(T^+)$, the <strong>total probability of a positive test</strong>, decomposes by the law of
+        total probability:</p>
+      $$P(T^+) = \bigl[P(T^+ \mid D^+) \cdot P(D^+)\bigr] + \bigl[P(T^+ \mid D^-) \cdot P(D^-)\bigr]$$
+      <table>
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Interpretation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>$P(D^+)$</td>
+            <td>Prior probability of disease = <strong>Prevalence</strong></td>
+          </tr>
+          <tr>
+            <td>$P(D^-)$</td>
+            <td>$1 - P(D^+)$</td>
+          </tr>
+          <tr>
+            <td>$P(T^+ \mid D^+)$</td>
+            <td><strong>Sensitivity</strong> (True Positive Rate)</td>
+          </tr>
+          <tr>
+            <td>$P(T^+ \mid D^-)$</td>
+            <td><strong>False Positive Rate</strong> $= 1 - \text{Specificity}$</td>
+          </tr>
+          <tr>
+            <td>$P(D^+ \mid T^+)$</td>
+            <td><strong>PPV</strong> &mdash; posterior probability of disease given a positive result</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="worked-example">
+        <div class="worked-example-label">Worked Example</div>
+        <p>Consider a screening programme: prevalence <strong>1%</strong> $\bigl(P(D^+) = 0.01\bigr)$, sensitivity
+          <strong>99%</strong>, specificity <strong>95%</strong>.</p>
+        $$P(T^+) = (0.99 \times 0.01) + (0.05 \times 0.99) = 0.0099 + 0.0495 = 0.0594$$
+        $$\text{PPV} = \frac{0.99 \times 0.01}{0.0594} \approx 0.167$$
+        <div class="result-highlight">&#9888;&#65039; Despite seemingly high technical accuracy, a positive result
+          confers only a <strong>16.7% probability</strong> of true disease. Approximately <strong>5 out of every 6
+            positive results are false positives</strong>.</div>
+      </div>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="The Illusion of Diagnostic Certainty_files/figure3_frequency_tree_1776600785896.png"
+        alt="Figure 3: Natural Frequency Tree" />
+      <div class="figure-caption"><strong>Figure 3.</strong> Natural frequency tree for 10,000 representative patients
+        (prevalence = 1%, sensitivity = 99%, specificity = 95%). Of 594 total positive results, only 99 are true
+        positives, yielding PPV &asymp; 16.7%. Natural frequency representations substantially reduce base rate neglect
+        compared to equivalent percentage formulations (Gigerenzer &amp; Hoffrage, 1995).</div>
+    </div>
+
+    <h2 class="section-head"><span class="roman">VI.</span> Clinical Implications</h2>
+    <ol>
+      <li><strong>Pre-test Probability is Paramount.</strong> Prior to ordering any diagnostic test, the clinician must
+        consciously estimate the pre-test probability of disease, drawing on patient history, risk factors, and
+        epidemiological data. The PPV of any result cannot be responsibly interpreted without this anchor.</li>
+      <li><strong>Confirmatory Testing in Cascade Architectures.</strong> For conditions of low prevalence, initial
+        screening-positive results should be subject to confirmatory testing with higher specificity. Each subsequent
+        positive result updates the posterior probability upwards, functioning as a sequential Bayesian inference chain.
+      </li>
+      <li><strong>Natural Frequencies Improve Communication.</strong> When communicating probabilistic risk to patients
+        or junior clinicians, expressing outcomes as natural frequencies (e.g., <em>&ldquo;5 out of every 6 people with
+          this result will not have the condition&rdquo;</em>) reduces base rate neglect compared to equivalent
+        percentage formulations.</li>
+      <li><strong>Institutional Protocols Must Encode Prevalence.</strong> Test interpretation guidelines should be
+        context-sensitive, providing differential PPV and NPV benchmarks for high-prevalence clinical settings versus
+        low-prevalence population-wide screening.</li>
+    </ol>
+
+    <h2 class="section-head"><span class="roman">VII.</span> Conclusion</h2>
+    <p>The positive predictive value of a diagnostic test is not an intrinsic property of the assay; it is an emergent
+      property of the interaction between the test&rsquo;s characteristics and the epidemiological context of its
+      application. A failure to internalise this principle&mdash;the essence of the base rate fallacy&mdash;leads to
+      systematic overconfidence in positive diagnostic results, with real and measurable harm to patients.</p>
+    <p>Bayes&rsquo; Theorem is not merely a mathematical convenience; it is the normative framework for rational
+      diagnostic inference. Its routine application, supported by natural frequency visualisations and probabilistic
+      literacy training, represents a meaningful and achievable improvement in the quality of clinical decision-making.
+    </p>
+
+    <div class="references">
+      <h2>References</h2>
+      <ol>
+        <li>Gigerenzer, G., &amp; Hoffrage, U. (1995). How to improve Bayesian reasoning without instruction: Frequency
+          formats. <em>Psychological Review, 102</em>(4), 684&ndash;704.</li>
+        <li>Sackett, D. L., Haynes, R. B., Guyatt, G. H., &amp; Tugwell, P. (1991). <em>Clinical Epidemiology: A Basic
+            Science for Clinical Medicine</em> (2nd ed.). Little, Brown and Company.</li>
+        <li>Fagan, T. J. (1975). Nomogram for Bayes&rsquo; theorem. <em>New England Journal of Medicine, 293</em>(5),
+          257.</li>
+        <li>Altman, D. G., &amp; Bland, J. M. (1994). Diagnostic tests 2: Predictive values. <em>BMJ, 309</em>(6947),
+          102.</li>
+      </ol>
+    </div>
+
+    <div class="doc-footer">
+      <span>The Illusion of Diagnostic Certainty</span>
+      <span>April 2026 &nbsp;&middot;&nbsp; Zoheb Haq</span>
+    </div>
+
+  </div>
+</body>
+
+</html>
